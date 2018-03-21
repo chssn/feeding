@@ -48,11 +48,11 @@ if (isset($_POST['finish'])) {
    $timenow = time();
    $timelastfeed = $timenow - $detail['end_time'];
    if (($detail['side']) == 1) {
-     $side = "on the <b>left</b> side";
+     $side = "from the <b>left</b> side";
    } elseif (($detail['side']) == 3) {
-     $side = "on the <b>right</b> side";
+     $side = "from the <b>right</b> side";
    } elseif (($detail['side']) == 2) {
-     $side = "with a <b>bottle</b>";
+     $side = $detail['fluid'] . "ml from a <b>bottle</b>";
    }
    $duration = $detail['end_time'] - $detail['start_time'];
    ?>
@@ -63,17 +63,42 @@ if (isset($_POST['finish'])) {
         <h2>Prepare to feed...</h2>
       </header>
       <div class="w3-container">
-        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since the last feed. This was at ".date('H:i', $detail['end_time'])." when you fed $side for ".gmdate('H:i', $duration); ?></p>
+        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since the last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?></p>
         <p><i>(Times are in hours and minutes)</i></p>
       </div>
       <button class="w3-button w3-block w3-blue w3-section w3-padding" onclick="document.getElementById('lastfeed').style.display='none'">Ok</button>
     </div>
   </div>
   <div class="w3-container">
-    <button onclick="myFunction('feed_hx')" class="w3-btn w3-block w3-blue">Feed History</button>
-
-    <div id="feed_hx" class="w3-hide w3-container w3-center w3-pale-blue">
-      <p>!! NOT CODED !!</p>
+    <button onclick="myFunction('feed_hx')" class="w3-btn w3-block w3-blue">Feed History (Last 10)</button>
+    <div id="feed_hx" class="w3-hide w3-container">
+      <table class="w3-table-all w3-mobile">
+        <tr>
+          <th>Side</th>
+          <th>Date</th>
+          <th>Start</th>
+          <th>Finish</th>
+          <th>Duration</th>
+          <th>Qty</th>
+        </tr>
+        <?php
+        //get all feeds in reverse chronological order
+        $sql = "SELECT start_time, end_time, fluid, feed_side.side FROM feeding_log LEFT JOIN feed_side ON feeding_log.side = feed_side.id ORDER BY feeding_log.id DESC LIMIT 10";
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+          ?>
+          <tr>
+            <td><?php echo $row['side']; ?></td>
+            <td><?php echo date('d/m', $row['start_time']); ?></td>
+            <td><?php echo date('H:i', $row['start_time']); ?></td>
+            <td><?php echo date('H:i', $row['end_time']); ?></td>
+            <td><?php $diff = $row['end_time'] - $row['start_time']; echo gmdate('H:i', $diff); ?></td>
+            <td><?php if ($row['fluid'] != NULL) { echo $row['fluid']."ml"; } else { echo "Breast"; }?></td>
+          </tr>
+          <?php
+        }
+        ?>
+      </table>
     </div>
   </div>
   <div class="w3-container w3-center">
