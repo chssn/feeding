@@ -46,7 +46,7 @@ if (isset($_POST['finish'])) {
    $result = $conn->query($sql);
    $detail = $result->fetch_assoc();
    $timenow = time();
-   $timelastfeed = $timenow - $detail['start_time'];
+   $timelastfeed = $timenow - $detail['end_time'];
    if (($detail['side']) == 1) {
      $side = "on the <b>left</b> side";
    } elseif (($detail['side']) == 3) {
