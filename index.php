@@ -70,7 +70,7 @@ if (isset($_POST['finish'])) {
     </div>
   </div>
   <div class="w3-container">
-    <button onclick="myFunction('feed_hx')" class="w3-btn w3-block w3-blue">Feed History (Last 10)</button>
+    <button onclick="myFunction('feed_hx')" class="w3-btn w3-block w3-blue"><i class="fas fa-hand-point-right"></i> Feed History (Last 10) <i class="fas fa-hand-point-left"></i></button>
     <div id="feed_hx" class="w3-hide w3-container">
       <table class="w3-table-all w3-mobile">
         <tr>
