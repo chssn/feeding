@@ -63,8 +63,8 @@ if (isset($_POST['finish'])) {
         <h2>Prepare to feed...</h2>
       </header>
       <div class="w3-container">
-        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since the last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?></p>
-        <p><i>(Times are in hours and minutes)</i></p>
+        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since Abigail's last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?></p>
+        <p><i>(Times are in hours and minutes - full statistics available <a href="stats.php">here</a>)</i></p>
       </div>
       <button class="w3-button w3-block w3-blue w3-section w3-padding" onclick="document.getElementById('lastfeed').style.display='none'">Ok</button>
     </div>
@@ -72,6 +72,7 @@ if (isset($_POST['finish'])) {
   <div class="w3-container">
     <button onclick="myFunction('feed_hx')" class="w3-btn w3-block w3-blue"><i class="fas fa-hand-point-right"></i> Feed History (Last 10) <i class="fas fa-hand-point-left"></i></button>
     <div id="feed_hx" class="w3-hide w3-container">
+      <p class="w3-center">Full statistics available <a href="stats.php">here</a></p>
       <table class="w3-table-all w3-mobile">
         <tr>
           <th>Side</th>
