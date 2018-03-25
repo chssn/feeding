@@ -36,6 +36,11 @@ if (isset($_POST['finish'])) {
    //check for existance of a start time
    if (isset($_GET['start'])) {
      $start_time = $_GET['start'];
+     $diff = time() - $start_time;
+     if ($diff > 7200 OR $diff < 0) { //if the start time provided is more than 2 hours ago or a time in the future is provided
+       header("Location: /feeding/");
+       exit;
+     }
      ?><body onload="safariSafe(<?php echo $start_time; ?>)"><?php
    } else {
      ?><body onload="document.getElementById('lastfeed').style.display='block'"><?php
@@ -111,7 +116,7 @@ if (isset($_POST['finish'])) {
   </div>
   <div class="w3-container w3-center">
     <button onclick="startFeed()" class="w3-button w3-green w3-third">Start Feed Now</button>
-    <button onclick="location.reload()" class="w3-button w3-blue w3-third">Reset Page</button>
+    <button onclick="location.href='/feeding/'" class="w3-button w3-blue w3-third">Reset Page</button>
     <button onclick="stopClock(); endUnix()" class="w3-button w3-red w3-third">Stop Feed</button>
   </div>
   <form class="w3-container w3-card-4 w3-mobile" name="feed" id="feed" action="index.php" method="post">
