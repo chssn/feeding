@@ -34,12 +34,6 @@ if (isset($_POST['finish'])) {
 </head>
 <body onload="document.getElementById('lastfeed').style.display='block'">
    <?php
-   //no popup on reloads
-   /*if (!isset($_GET['nopop'])) {
-     echo ?><body onload="document.getElementById('lastfeed').style.display='block'"><?php ;
-   } else {
-      echo "<body>";
-   }*/
    //get last feed information
    require 'include/sql-connect.php';
    $sql = "SELECT * FROM feeding_log ORDER BY id DESC LIMIT 1";
@@ -81,12 +75,14 @@ if (isset($_POST['finish'])) {
           <th>Finish</th>
           <th>Duration</th>
           <th>Qty</th>
+          <th>Delete</th>
         </tr>
         <?php
         //get all feeds in reverse chronological order
-        $sql = "SELECT start_time, end_time, fluid, feed_side.side FROM feeding_log LEFT JOIN feed_side ON feeding_log.side = feed_side.id ORDER BY feeding_log.id DESC LIMIT 10";
+        $sql = "SELECT feeding_log.id, start_time, end_time, fluid, feed_side.side FROM feeding_log LEFT JOIN feed_side ON feeding_log.side = feed_side.id ORDER BY feeding_log.id DESC LIMIT 10";
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
+          $hash = hash('sha256', $row['id']); //sec_key is defined in include/sql-connect.php
           ?>
           <tr>
             <td><?php echo $row['side']; ?></td>
@@ -95,6 +91,7 @@ if (isset($_POST['finish'])) {
             <td><?php echo date('H:i', $row['end_time']); ?></td>
             <td><?php $diff = $row['end_time'] - $row['start_time']; echo gmdate('H:i', $diff); ?></td>
             <td><?php if ($row['fluid'] != NULL) { echo $row['fluid']."ml"; } else { echo "Breast"; }?></td>
+            <td><button class="w3-button" onclick="deleteRecord('<?php echo $hash; ?>');"><i class="fas fa-trash-alt"></i></button></td>
           </tr>
           <?php
         }
@@ -184,6 +181,12 @@ if (isset($_POST['finish'])) {
         x.className += " w3-show";
     } else {
         x.className = x.className.replace(" w3-show", "");
+    }
+  }
+  //delete confirmation
+  function deleteRecord(hash) {
+    if (confirm('Are you sure you want to delete this record?')) {
+      location.href='remove.php?f=' + hash;
     }
   }
   </script>
