@@ -18,7 +18,7 @@ if (isset($_POST['finish'])) {
   if ($conn->query($sql) === TRUE) {
       $last_id = $conn->insert_id;
       $send = base64_encode($key . "-" . time());
-      ?><script>alert('Feed Saved'); window.location.replace("?nopop");</script><?php
+      ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
   	exit;
@@ -32,8 +32,14 @@ if (isset($_POST['finish'])) {
   <link rel="stylesheet" href="css/flipclock.css">
   <script src="js/flipclock.js"></script>
 </head>
-<body onload="document.getElementById('lastfeed').style.display='block'">
    <?php
+   //check for existance of a start time
+   if (isset($_GET['start'])) {
+     $start_time = $_GET['start'];
+     ?><body onload="safariSafe(<?php echo $start_time; ?>)"><?php
+   } else {
+     ?><body onload="document.getElementById('lastfeed').style.display='block'"><?php
+   }
    //get last feed information
    require 'include/sql-connect.php';
    $sql = "SELECT * FROM feeding_log ORDER BY id DESC LIMIT 1";
@@ -104,7 +110,7 @@ if (isset($_POST['finish'])) {
     <div class="timer" style="display: inline-block; width: auto;"></div>
   </div>
   <div class="w3-container w3-center">
-    <button onclick="startClock(); startUnix()" class="w3-button w3-green w3-third">Start Feed Now</button>
+    <button onclick="startFeed()" class="w3-button w3-green w3-third">Start Feed Now</button>
     <button onclick="location.reload()" class="w3-button w3-blue w3-third">Reset Page</button>
     <button onclick="stopClock(); endUnix()" class="w3-button w3-red w3-third">Stop Feed</button>
   </div>
@@ -140,11 +146,20 @@ if (isset($_POST['finish'])) {
     clockFace: 'MinuteCounter',
     autoStart: false,
   });
-  function startClock() {
-    clock.setTime(0);
+  function safariSafe(start) { //function so that even if safari decides to reload the whole page, the start time will be retained
+    var diff = moment().format('X') - start;
+    startClock(diff, start);
+  }
+  function startFeed() {
+    var now = moment().format('X')
+    location.href='?start=' + now;
+  }
+  function startClock(diff, start) {
+    clock.setTime(diff);
     clock.start();
-    var timeStart = moment().format('YYYY-MM-DDTHH:mm:ss');
+    var timeStart = moment(start, 'X').format('YYYY-MM-DDTHH:mm:ss');
     document.getElementById('start').value=timeStart;
+    startUnix();
   }
   function stopClock() {
     clock.stop();
