@@ -17,7 +17,6 @@ if (isset($_POST['finish'])) {
   }
   if ($conn->query($sql) === TRUE) {
       $last_id = $conn->insert_id;
-      $send = base64_encode($key . "-" . time());
       ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
