@@ -1,2 +1,3 @@
 include/sql-connect.php
 .htaccess
+bottle/
