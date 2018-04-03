@@ -1,4 +1,4 @@
-<div<?php
+<?php
 date_default_timezone_set("Europe/London");
 if (isset($_POST['finish'])) {
   require 'include/sql-connect.php';
@@ -8,10 +8,23 @@ if (isset($_POST['finish'])) {
   $start = $_POST['start_unix'];
   $finish = $_POST['finish_unix'];
   $fluid = $_POST['fluid'];
+  $express = $_POST['express'];
 
-  //check to see if bottle feed
-  if ($side == 2) {
-    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid) VALUES ($side, $start, $finish, $fluid)";
+  if ($express === 'on') {
+    //insert expressed milk into a different table
+    $sql = "INSERT INTO express_log (start_time, end_time, qty) VALUES ($start, $finish, $fluid)"
+    if ($conn->query($sql) === TRUE) {
+        $last_id = $conn->insert_id;
+        ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    	exit;
+    }
+  }
+  if ($side == 2) { //check to see if formula feed
+    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid, ebm) VALUES ($side, $start, $finish, $fluid, 0)";
+  } elseif ($side == 4) { //check to see if expressed breast milk feed
+    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid, ebm) VALUES ($side, $start, $finish, $fluid, 1)";
   } else {
     $sql = "INSERT INTO feeding_log (side, start_time, end_time) VALUES ($side, $start, $finish)";
   }
