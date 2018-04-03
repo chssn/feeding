@@ -12,7 +12,7 @@ if (isset($_POST['finish'])) {
 
   if ($express === 'on') {
     //insert expressed milk into a different table
-    $sql = "INSERT INTO express_log (start_time, end_time, qty) VALUES ($start, $finish, $fluid)"
+    $sql = "INSERT INTO express_log (start_time, end_time, qty) VALUES ($start, $finish, $fluid)";
     if ($conn->query($sql) === TRUE) {
         $last_id = $conn->insert_id;
         ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
@@ -133,18 +133,20 @@ if (isset($_POST['finish'])) {
   </div>
   <form class="w3-container w3-card-4 w3-mobile" name="feed" id="feed" action="index.php" method="post">
   <div class="w3-panel w3-pale-blue w3-center">Side</div>
-    <div class="w3-row">
-      <div class="w3-quarter w3-center"><i class="fas fa-arrow-left fa-2x w3-text-red"></i></div>
-      <div class="w3-quarter w3-center"><i class="fas fa-beer fa-2x"></i></div>
-      <div class="w3-quarter w3-center"><i class="fas fa-female fa-2x"></i></div>
-      <div class="w3-quarter w3-center"><i class="fas fa-arrow-right fa-2x w3-text-green"></i></div>
-    </div>
-    <div class="w3-row">
-      <div class="w3-quarter w3-center"><input class="w3-radio" type="radio" id="side1" name="side" value="1" onclick="fluidIntake('hide')" required></div>
-      <div class="w3-quarter w3-center"><input class="w3-radio" type="radio" id="side2" name="side" value="2" onclick="fluidIntake('show')" required></div>
-      <div class="w3-quarter w3-center"><input class="w3-radio" type="radio" id="side4" name="side" value="4" onclick="fluidIntake('show')" required></div>
-      <div class="w3-quarter w3-center"><input class="w3-radio" type="radio" id="side3" name="side" value="3" onclick="fluidIntake('hide')" required></div>
-    </div>
+    <table class="w3-table w3-centered">
+      <tr>
+        <td><i class="fas fa-arrow-left fa-2x w3-text-red"></i></td>
+        <td><i class="fas fa-beer fa-2x"></i></td>
+        <td><i class="fas fa-female fa-2x"></i></td>
+        <td><i class="fas fa-arrow-right fa-2x w3-text-green"></i></td>
+      </tr>
+      <tr>
+        <td><input class="w3-radio" type="radio" id="side1" name="side" value="1" onclick="fluidIntake('hide')" required></td>
+        <td><input class="w3-radio" type="radio" id="side2" name="side" value="2" onclick="fluidIntake('show')" required></td>
+        <td><input class="w3-radio" type="radio" id="side4" name="side" value="4" onclick="fluidIntake('show')" required></td>
+        <td><input class="w3-radio" type="radio" id="side3" name="side" value="3" onclick="fluidIntake('hide')" required></td>
+      </tr>
+    </table>
     <div class="w3-whole w3-center"><input class="w3-check" type="checkbox" name="express" id="express" onclick="checkExpress()"><label> Expressing</label></div>
     <div class="w3-panel w3-pale-green w3-center">Start Time</div>
     <input class="w3-input" type="datetime-local" step="1" name="start" id="start" onchange="startUnix()" required>
