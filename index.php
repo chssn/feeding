@@ -8,10 +8,23 @@ if (isset($_POST['finish'])) {
   $start = $_POST['start_unix'];
   $finish = $_POST['finish_unix'];
   $fluid = $_POST['fluid'];
+  $express = $_POST['express'];
 
-  //check to see if bottle feed
-  if ($side == 2) {
-    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid) VALUES ($side, $start, $finish, $fluid)";
+  if ($express === 'on') {
+    //insert expressed milk into a different table
+    $sql = "INSERT INTO express_log (start_time, end_time, qty) VALUES ($start, $finish, $fluid)";
+    if ($conn->query($sql) === TRUE) {
+        $last_id = $conn->insert_id;
+        ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    	exit;
+    }
+  }
+  if ($side == 2) { //check to see if formula feed
+    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid, ebm) VALUES ($side, $start, $finish, $fluid, 0)";
+  } elseif ($side == 4) { //check to see if expressed breast milk feed
+    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid, ebm) VALUES ($side, $start, $finish, $fluid, 1)";
   } else {
     $sql = "INSERT INTO feeding_log (side, start_time, end_time) VALUES ($side, $start, $finish)";
   }
@@ -114,22 +127,27 @@ if (isset($_POST['finish'])) {
     <div class="timer" style="display: inline-block; width: auto;"></div>
   </div>
   <div class="w3-container w3-center">
-    <button onclick="startFeed()" class="w3-button w3-green w3-third">Start Feed Now</button>
-    <button onclick="location.href='/feeding/'" class="w3-button w3-blue w3-third">Reset Page</button>
-    <button onclick="stopClock(); endUnix()" class="w3-button w3-red w3-third">Stop Feed</button>
+    <button onclick="startFeed()" class="w3-button w3-green w3-third">Start</button>
+    <button onclick="location.href='/feeding/'" class="w3-button w3-blue w3-third">Reset</button>
+    <button onclick="stopClock(); endUnix()" class="w3-button w3-red w3-third">Stop</button>
   </div>
   <form class="w3-container w3-card-4 w3-mobile" name="feed" id="feed" action="index.php" method="post">
-    <div class="w3-panel w3-pale-blue w3-center">Side</div>
+  <div class="w3-panel w3-pale-blue w3-center">Side</div>
     <table class="w3-table w3-centered">
-      <tr><td colspan="5"><i class="fas fa-beer fa-2x"></i></td></tr>
       <tr>
-        <td style="width:20%"><i class="fas fa-arrow-left fa-2x w3-text-red"></i></td>
-        <td style="width:20%"><input class="w3-radio" type="radio" name="side" value="1" onclick="fluidIntake('hide')" required></td>
-        <td style="width:20%"><input class="w3-radio" type="radio" name="side" value="2" onclick="fluidIntake('show')" required></td>
-        <td style="width:20%"><input class="w3-radio" type="radio" name="side" value="3" onclick="fluidIntake('hide')" required></td>
-        <td style="width:20%"><i class="fas fa-arrow-right fa-2x w3-text-green"></i></td>
+        <td><i class="fas fa-arrow-left fa-2x w3-text-red"></i></td>
+        <td><i class="fas fa-beer fa-2x"></i></td>
+        <td><i class="fas fa-female fa-2x"></i></td>
+        <td><i class="fas fa-arrow-right fa-2x w3-text-green"></i></td>
+      </tr>
+      <tr>
+        <td><input class="w3-radio" type="radio" id="side1" name="side" value="1" onclick="fluidIntake('hide')" required></td>
+        <td><input class="w3-radio" type="radio" id="side2" name="side" value="2" onclick="fluidIntake('show')" required></td>
+        <td><input class="w3-radio" type="radio" id="side4" name="side" value="4" onclick="fluidIntake('show')" required></td>
+        <td><input class="w3-radio" type="radio" id="side3" name="side" value="3" onclick="fluidIntake('hide')" required></td>
       </tr>
     </table>
+    <div class="w3-whole w3-center"><input class="w3-check" type="checkbox" name="express" id="express" onclick="checkExpress()"><label> Expressing</label></div>
     <div class="w3-panel w3-pale-green w3-center">Start Time</div>
     <input class="w3-input" type="datetime-local" step="1" name="start" id="start" onchange="startUnix()" required>
     <div class="w3-panel w3-pale-red w3-center">Finish Time</div>
@@ -140,9 +158,8 @@ if (isset($_POST['finish'])) {
       <div class="w3-panel w3-pale-blue w3-center">Bottle Feed Amount (ml)</div>
       <input class="w3-input" type="number" name="fluid" id="fluid" min="0" max="500" step="10">
     </div>
-    <input class="w3-button w3-block w3-green w3-section w3-padding" type="submit" value="Save Feed">
+    <input class="w3-button w3-block w3-green w3-section w3-padding" type="submit" value="Save">
   </form>
-  <div id="duration"></div>
   <script src="js/moment.js"></script>
   <script type="text/javascript">
   //section for timer
@@ -191,6 +208,24 @@ if (isset($_POST['finish'])) {
     } else if (input === 'hide') {
       feedInput.style.display = 'none';
       document.getElementById('fluid').removeAttribute("required");
+    }
+  }
+  //checks if expressing has been checked which will modify the input sql query on submission
+  function checkExpress() {
+    var express = document.getElementById('express');
+    // If the checkbox is checked, display the output text
+    if (express.checked == true){
+      fluidIntake('show');
+      document.getElementById('side1').removeAttribute("required");
+      document.getElementById('side2').removeAttribute("required");
+      document.getElementById('side3').removeAttribute("required");
+      document.getElementById('side4').removeAttribute("required");
+    } else {
+      fluidIntake('hide');
+      document.getElementById('side1').setAttribute("required", true);
+      document.getElementById('side2').setAttribute("required", true);
+      document.getElementById('side3').setAttribute("required", true);
+      document.getElementById('side4').setAttribute("required", true);
     }
   }
   //function for accordion button
