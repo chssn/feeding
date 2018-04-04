@@ -69,9 +69,19 @@ if (isset($_POST['finish'])) {
    } elseif (($detail['side']) == 3) {
      $side = "from the <b>right</b> side";
    } elseif (($detail['side']) == 2) {
-     $side = $detail['fluid'] . "ml from a <b>bottle</b>";
+     $side = $detail['fluid'] . "ml from a <b>bottle of formula</b>";
+   } elseif (($detail['side']) == 4) {
+     $side = $detail['fluid'] . "ml from a <b>bottle of breast milk</b>";
    }
    $duration = $detail['end_time'] - $detail['start_time'];
+
+   //get last express information
+   $sql = "SELECT * FROM express_log ORDER BY id DESC LIMIT 1";
+   $result = $conn->query($sql);
+   $dexpress = $result->fetch_assoc();
+   $durationexpress = $dexpress['end_time'] - $dexpress['start_time'];
+   $timelastexpress = $timenow - $dexpress['end_time'];
+
    ?>
    <div id="lastfeed" class="w3-modal" style="z-index:100">
     <div class="w3-modal-content">
@@ -80,7 +90,8 @@ if (isset($_POST['finish'])) {
         <h2>Prepare to feed...</h2>
       </header>
       <div class="w3-container">
-        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since Abigail's last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?></p>
+        <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since Abigail's last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?>.</p>
+        <p><?php echo "You last expressed milk ".gmdate('H:i', $timelastexpress)." ago at ".date('H:i', $dexpress['end_time']).". This was for ".gmdate('H:i', $durationexpress); ?>. Don't forget that you only need to put a tick in the "Expressing" box and then record start, finish and amount to log expressed milk.</p>
         <p><i>(Times are in hours and minutes - full statistics available <a href="stats.php">here</a>)</i></p>
       </div>
       <button class="w3-button w3-block w3-blue w3-section w3-padding" onclick="document.getElementById('lastfeed').style.display='none'">Ok</button>
