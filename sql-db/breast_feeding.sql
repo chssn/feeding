@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 03, 2018 at 10:30 PM
+-- Generation Time: Apr 04, 2018 at 07:40 PM
 -- Server version: 5.7.21-0ubuntu0.16.04.1
 -- PHP Version: 7.0.28-0ubuntu0.16.04.1
 
@@ -23,6 +23,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `express_log`
+--
+
+CREATE TABLE `express_log` (
+  `id` int(11) NOT NULL,
+  `start_time` int(11) NOT NULL,
+  `end_time` int(11) NOT NULL,
+  `qty` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `feeding_log`
 --
 
@@ -31,7 +44,8 @@ CREATE TABLE `feeding_log` (
   `side` int(11) NOT NULL,
   `start_time` int(11) NOT NULL,
   `end_time` int(11) NOT NULL,
-  `fluid` int(11) DEFAULT NULL
+  `fluid` int(11) DEFAULT NULL,
+  `ebm` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -51,12 +65,19 @@ CREATE TABLE `feed_side` (
 
 INSERT INTO `feed_side` (`id`, `side`) VALUES
 (1, 'Left'),
-(2, 'Bottle'),
-(3, 'Right');
+(2, 'Bottle (Formula)'),
+(3, 'Right'),
+(4, 'Bottle (Breast)');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `express_log`
+--
+ALTER TABLE `express_log`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `feeding_log`
@@ -75,15 +96,20 @@ ALTER TABLE `feed_side`
 --
 
 --
+-- AUTO_INCREMENT for table `express_log`
+--
+ALTER TABLE `express_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `feeding_log`
 --
 ALTER TABLE `feeding_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
 --
 -- AUTO_INCREMENT for table `feed_side`
 --
 ALTER TABLE `feed_side`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
