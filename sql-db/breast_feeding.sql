@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 04, 2018 at 07:40 PM
+-- Generation Time: Apr 04, 2018 at 08:49 PM
 -- Server version: 5.7.21-0ubuntu0.16.04.1
 -- PHP Version: 7.0.28-0ubuntu0.16.04.1
 
@@ -19,19 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `breast_feeding`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `express_log`
---
-
-CREATE TABLE `express_log` (
-  `id` int(11) NOT NULL,
-  `start_time` int(11) NOT NULL,
-  `end_time` int(11) NOT NULL,
-  `qty` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -67,17 +54,12 @@ INSERT INTO `feed_side` (`id`, `side`) VALUES
 (1, 'Left'),
 (2, 'Bottle (Formula)'),
 (3, 'Right'),
-(4, 'Bottle (Breast)');
+(4, 'Bottle (Breast)'),
+(5, 'Expressed');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `express_log`
---
-ALTER TABLE `express_log`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `feeding_log`
@@ -96,20 +78,15 @@ ALTER TABLE `feed_side`
 --
 
 --
--- AUTO_INCREMENT for table `express_log`
---
-ALTER TABLE `express_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
 -- AUTO_INCREMENT for table `feeding_log`
 --
 ALTER TABLE `feeding_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=264;
 --
 -- AUTO_INCREMENT for table `feed_side`
 --
 ALTER TABLE `feed_side`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

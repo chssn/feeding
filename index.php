@@ -12,7 +12,7 @@ if (isset($_POST['finish'])) {
 
   if ($express === 'on') {
     //insert expressed milk into a different table
-    $sql = "INSERT INTO express_log (start_time, end_time, qty) VALUES ($start, $finish, $fluid)";
+    $sql = "INSERT INTO feeding_log (side, start_time, end_time, fluid, ebm) VALUES (5, $start, $finish, $fluid, 1)";
     if ($conn->query($sql) === TRUE) {
         $last_id = $conn->insert_id;
         ?><script>alert('Feed Saved'); window.location.replace("/feeding/");</script><?php
@@ -76,7 +76,7 @@ if (isset($_POST['finish'])) {
    $duration = $detail['end_time'] - $detail['start_time'];
 
    //get last express information
-   $sql = "SELECT * FROM express_log ORDER BY id DESC LIMIT 1";
+   $sql = "SELECT * FROM feeding_log WHERE side = 5 ORDER BY id DESC LIMIT 1";
    $result = $conn->query($sql);
    $dexpress = $result->fetch_assoc();
    $durationexpress = $dexpress['end_time'] - $dexpress['start_time'];
