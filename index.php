@@ -59,7 +59,7 @@ if (isset($_POST['finish'])) {
    }
    //get last feed information
    require 'include/sql-connect.php';
-   $sql = "SELECT * FROM feeding_log ORDER BY id DESC LIMIT 1";
+   $sql = "SELECT * FROM feeding_log WHERE side < 5 ORDER BY id DESC LIMIT 1";
    $result = $conn->query($sql);
    $detail = $result->fetch_assoc();
    $timenow = time();
