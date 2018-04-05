@@ -27,7 +27,7 @@
         FROM
           feeding_log
         WHERE
-          DATE(FROM_UNIXTIME(start_time)) = CURDATE();
+          DATE(FROM_UNIXTIME(start_time)) = CURDATE() AND side < 5;
         SELECT
           SEC_TO_TIME(SUM(duration)),
           feed_side.side,
@@ -50,6 +50,23 @@
               $result->free();
             }
           } while ($conn->next_result());
+        }
+        //section to provide total amount expressed TODAY
+        $sql = "SELECT
+                  SEC_TO_TIME(SUM(end_time-start_time)) AS duration,
+                  feed_side.side AS side,
+                  SUM(fluid) AS fluid
+                FROM
+                  feeding_log
+                LEFT JOIN
+                  feed_side ON feeding_log.side = feed_side.id
+                WHERE
+                  DATE(FROM_UNIXTIME(start_time)) = CURDATE() AND feeding_log.side = 5
+                GROUP BY
+                  feed_side.side ASC";
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_array()) {
+          echo "<tr class='w3-pale-blue'><td>{$row['side']}</td><td>{$row['duration']}</td><td>{$row['fluid']}</tr></tr>";
         }
         ?>
       </table>
