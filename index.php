@@ -90,6 +90,7 @@ if (isset($_POST['finish'])) {
         <h2>Prepare to feed...</h2>
       </header>
       <div class="w3-container">
+        <p><b>STOP! Have you given infacol?</b></p>
         <p><?php echo "It has been ".gmdate('H:i', $timelastfeed)." since Abigail's last feed. This was at ".date('H:i', $detail['end_time'])." when Abigail was fed $side for ".gmdate('H:i', $duration); ?>.</p>
         <p><?php echo "You expressed {$dexpress['fluid']}ml ".gmdate('H:i', $timelastexpress)." ago at ".date('H:i', $dexpress['end_time']).". This took ".gmdate('H:i', $durationexpress); ?>. Don't forget that you only need to put a tick in the "Expressing" box and then record start, finish and amount to log expressed milk.</p>
         <p><i>(Times are in hours and minutes - full statistics available <a href="stats.php">here</a>)</i></p>
